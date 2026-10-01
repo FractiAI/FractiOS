@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#06080d">
+<title>FractiOS Operator Console — Holographic Homeostasis</title>
+<style>
+  :root {
+    --bg: #06080d;
+    --panel: #0b0f16;
+    --panel-2: #0e131c;
+    --line: #1a2230;
+    --line-thin: #131a26;
+    --gold: #d4a94e;
+    --gold-dim: #8a6d31;
+    --text: #c9d4e3;
+    --dim: #77839a;
+    --faint: #4a5568;
+    --ok: #6fcf8f;
+    --fail: #e06a6a;
+    --warn: #e0b46a;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body {
+    margin: 0; color: var(--text); background: var(--bg);
+    font-family: var(--mono); font-size: 13px; line-height: 1.55;
+    background-image:
+      linear-gradient(var(--line-thin) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-thin) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  header, footer { max-width: 1180px; margin: 0 auto; padding: 18px 20px; }
+  main { max-width: 1180px; margin: 0 auto; padding: 0 20px 28px; }
+  h1 { font-size: 17px; letter-spacing: .06em; color: var(--gold); margin: 0 0 4px; font-weight: 600; }
+  h2 { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin: 0 0 10px; font-weight: 600; }
+  a { color: var(--gold); }
+  .ident { color: var(--dim); font-size: 11px; letter-spacing: .04em; }
+  .banner {
+    border: 1px solid var(--gold-dim); border-left: 3px solid var(--gold);
+    background: var(--panel); padding: 8px 12px; margin-top: 12px; color: var(--warn); font-size: 12px;
+  }
+  .banner .tier { color: var(--gold); }
+  section {
+    border: 1px solid var(--line); background: var(--panel);
+    margin: 14px 0; padding: 14px 16px;
+  }
+  .strip { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .stage {
+    border: 1px solid var(--line); background: var(--panel-2); padding: 6px 14px;
+    color: var(--dim); letter-spacing: .06em; font-size: 12px; position: relative;
+  }
+  .stage.active { border-color: var(--gold); color: var(--gold); box-shadow: 0 0 0 1px var(--gold-dim); }
+  .stage.active::after {
+    content: "◄ last stage on record"; position: absolute; left: 0; top: 100%;
+    font-size: 9px; color: var(--gold-dim); white-space: nowrap; padding-top: 2px;
+  }
+  .arrow { color: var(--faint); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  textarea, input[type="text"], input[type="number"] {
+    width: 100%; background: var(--panel-2); color: var(--text);
+    border: 1px solid var(--line); padding: 8px; font-family: var(--mono); font-size: 12px;
+  }
+  textarea { min-height: 130px; resize: vertical; }
+  textarea:focus, input:focus { outline: none; border-color: var(--gold-dim); }
+  button {
+    background: var(--panel-2); color: var(--gold); border: 1px solid var(--gold-dim);
+    padding: 7px 16px; font-family: var(--mono); font-size: 12px; letter-spacing: .08em;
+    cursor: pointer; margin-top: 10px;
+  }
+  button:hover { border-color: var(--gold); }
+  button:disabled { color: var(--dim); border-color: var(--line); cursor: wait; }
+  label { display: block; color: var(--dim); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; margin: 10px 0 4px; }
+  .row { display: flex; gap: 10px; }
+  .row > div { flex: 1; }
+  .metrics { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .metric {
+    border: 1px solid var(--line); background: var(--panel-2); padding: 6px 12px; min-width: 92px;
+  }
+  .metric .k { color: var(--dim); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
+  .metric .v { color: var(--gold); font-size: 15px; }
+  .chip {
+    display: inline-block; border: 1px solid var(--line); padding: 2px 9px; margin: 2px 4px 2px 0;
+    font-size: 11px; letter-spacing: .05em; color: var(--dim); background: var(--panel-2);
+  }
+  .chip.pass { color: var(--ok); border-color: #2b4a36; }
+  .chip.fail { color: var(--fail); border-color: #4a2b2b; }
+  .chip.tier { color: var(--gold); border-color: var(--gold-dim); }
+  .verdict { margin-top: 12px; padding: 8px 12px; border: 1px solid var(--line); background: var(--panel-2); }
+  .verdict.ok { border-color: #2b4a36; color: var(--ok); }
+  .verdict.no { border-color: #4a2b2b; color: var(--fail); }
+  .error {
+    border: 1px solid #4a2b2b; border-left: 3px solid var(--fail); background: #140b0e;
+    color: var(--fail); padding: 8px 12px; margin-top: 10px; word-break: break-all; font-size: 12px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { text-align: left; color: var(--dim); font-weight: 400; letter-spacing: .08em; text-transform: uppercase; font-size: 10px; }
+  th, td { border-bottom: 1px solid var(--line-thin); padding: 5px 8px; }
+  tr:hover td { background: var(--panel-2); }
+  td.name { color: var(--text); }
+  td .miss { color: var(--fail); }
+  td .here { color: var(--ok); }
+  .counts { margin-top: 10px; color: var(--dim); font-size: 12px; }
+  .counts b { color: var(--text); font-weight: 400; }
+  .det { border: 1px solid var(--line-thin); background: var(--panel-2); padding: 6px 10px; margin: 6px 0; font-size: 12px; }
+  .det .node { color: var(--gold); }
+  .det .act { color: var(--ok); }
+  .det .muted { color: var(--dim); }
+  .exp { display: flex; gap: 10px; align-items: baseline; border-bottom: 1px solid var(--line-thin); padding: 5px 2px; }
+  .exp .id { color: var(--dim); min-width: 300px; }
+  .exp .pass { color: var(--ok); }
+  .exp .nope { color: var(--fail); }
+  .legend { display: flex; flex-wrap: wrap; gap: 18px; color: var(--dim); font-size: 11px; }
+  .legend b { color: var(--gold); font-weight: 400; }
+  .chain { color: var(--faint); font-size: 11px; margin-top: 10px; letter-spacing: .03em; }
+  .banner.footer-banner { margin-top: 0; }
+  .muted-note { color: var(--faint); font-size: 11px; margin-top: 8px; }
+  .hdr-meta { margin-top: 6px; }
+</style>
+</head>
+<body>
+<header>
+  <h1 id="study-title">FractiOS — Holographic Homeostasis Firmware Layer</h1>
+  <div class="ident hdr-meta" id="ident-line">DOC_ID · REGISTRY_ID · OPERATOR · AUDIT_PROTOCOL — loading…</div>
+  <div class="banner"><span class="tier">[honesty boundary — always visible]</span> <span id="honesty-banner">loading…</span></div>
+</header>
+
+<main>
+  <section>
+    <h2>Pipeline — PARTS↔WHOLE↔PARTS</h2>
+    <div class="strip" id="pipeline-strip"></div>
+    <div class="muted-note" id="strip-note">Active stage derives from the last exploration record (commit committed → Commit; verify failed → Verify). No record yet: strip unhighlighted.</div>
+  </section>
+
+  <section>
+    <h2>Explorer drill — e-Explore → rho-Reconcile</h2>
+    <div class="grid">
+      <div>
+        <label for="candidate-json">Candidate (JSON object)</label>
+        <textarea id="candidate-json" spellcheck="false">{
+  "seed": { "octave": 0, "value": 0, "type": "origin" },
+  "alpha_a": 0.62,
+  "alpha_b": 0.44,
+  "alpha_c": 0.58,
+  "probe_x": 0.1,
+  "probe_y": 0.2
+}</textarea>
+        <button id="explore-btn" type="button">RUN PIPELINE</button>
+        <div class="muted-note">POST /api/explore — the pipeline runs against the current canonical state (data/canonical.json, else the Seed:Edge origin arm) and persists under data/explorations/ only.</div>
+        <div id="explore-error"></div>
+      </div>
+      <div>
+        <label>Reconcile metrics [operational]</label>
+        <div class="metrics" id="reconcile-metrics"></div>
+        <label>Verify gates [operational]</label>
+        <div id="gate-chips"></div>
+        <label>Commit verdict</label>
+        <div id="commit-verdict" class="verdict">— no run this session —</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Estate — 57-repo manifest vs vault on disk</h2>
+    <label for="estate-filter">Live filter</label>
+    <input type="text" id="estate-filter" placeholder="type to filter by name / branch / state / category" autocomplete="off">
+    <div id="estate-table" style="margin-top:10px; max-height: 340px; overflow: auto;"></div>
+    <div class="counts" id="validation-summary">loading…</div>
+    <div id="estate-error"></div>
+  </section>
+
+  <section>
+    <h2>Regulator drill — distributed PARTS↔WHOLE↔PARTS response</h2>
+    <div class="row">
+      <div>
+        <label for="pert-type">Perturbation type</label>
+        <input type="text" id="pert-type" value="load-spike" autocomplete="off">
+      </div>
+      <div>
+        <label for="pert-magnitude">Magnitude (0–1)</label>
+        <input type="number" id="pert-magnitude" value="0.4" min="0" max="1" step="0.05">
+      </div>
+      <div>
+        <label for="pert-targets">Targets (comma-separated node names, optional)</label>
+        <input type="text" id="pert-targets" placeholder="e.g. FractiOS" autocomplete="off">
+      </div>
+    </div>
+    <button id="regulate-btn" type="button">REGULATE</button>
+    <div id="regulate-error"></div>
+    <div id="regulate-out"></div>
+  </section>
+
+  <section>
+    <h2>Experiments — synthobs empirical suite E1..E9</h2>
+    <div id="exp-summary" class="counts">loading…</div>
+    <div id="exp-list" style="margin-top:8px;"></div>
+    <div id="experiments-error"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="legend">
+    <span><b>[mythic]</b> narrative framing; makes no factual assertion</span>
+    <span><b>[operational]</b> design intent; true of the design, not yet exercised</span>
+    <span><b>[verified]</b> checked against code, disk, or held-out catalog receipts</span>
+  </div>
+  <div class="banner footer-banner" style="margin-top:12px;"><span class="tier">[honesty boundary]</span> <span id="honesty-footer">loading…</span></div>
+  <div class="chain">Supersets chain: NSPFRNP &gt; BBHE Repository Standard &gt; EGS Fractal &gt; Seed:Edge &gt; Executive Prompts &gt; Lite Edges &gt; infinity-9</div>
+  <div class="chain">Operator surface: single-file console, zero external fetches; keys and explorations stay local under data/.</div>
+</footer>
+
+<script>
+"use strict";
+
+// ---- helpers -------------------------------------------------------------
+var STAGES = ["Explore", "Organize", "Contain", "Reconcile", "Verify", "Commit"];
+
+function $(id) { return document.getElementById(id); }
+
+function esc(value) {
+  return String(value == null ? "" : value)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+function fmt(value, digits) {
+  return typeof value === "number" && Number.isFinite(value) ? value.toFixed(digits == null ? 3 : digits) : String(value == null ? "—" : value);
+}
+
+// Fail-loud API wrapper: network, HTTP, and envelope failures all throw.
+async function api(path, options) {
+  var res;
+  try {
+    res = await fetch(path, options);
+  } catch (err) {
+    throw new Error("network failure calling " + path + ": " + (err && err.message ? err.message : err));
+  }
+  var text = await res.text();
+  var envelope;
+  try {
+    envelope = JSON.parse(text);
+  } catch (err) {
+    throw new Error(path + " returned non-JSON (HTTP " + res.status + "): " + text.slice(0, 240));
+  }
+  if (!res.ok || envelope.success === false) {
+    throw new Error(path + " → HTTP " + res.status + ": " + (envelope && envelope.error ? envelope.error : "failed envelope"));
+  }
+  return envelope;
+}
+
+function loud(scopeId, err) {
+  var scope = $(scopeId);
+  if (!scope) { window.console && console.error(err); return; }
+  scope.innerHTML = '<div class="error">FAIL-CLOSED · ' + esc(err && err.message ? err.message : err) + "</div>";
+}
+
+function clear(scopeId) { $(scopeId).innerHTML = ""; }
+
+var CONSTANTS = null; // populated from /api/status (NSPFRP: reference, never copy)
+
+async function loadStatus() {
+  try {
+    var env = await api("/api/status");
+    $("study-title").textContent = env.studyTitle;
+    $("ident-line").textContent =
+      "DOC_ID " + env.docId + " · REGISTRY_ID " + env.registryId + " · OPERATOR " + env.operator + " · AUDIT " + env.auditProtocol
+      + " · " + env.nodeCount + " nodes · loop " + env.loop;
+    $("honesty-banner").textContent = env.honestyBoundary;
+    $("honesty-footer").textContent = env.honestyBoundary;
+    CONSTANTS = env.constants || null;
+  } catch (err) {
+    $("ident-line").textContent = "status unavailable";
+    loud("explore-error", err);
+  }
+}
+
+// ---- pipeline strip ------------------------------------------------------
+function renderStrip(last) {
+  var active = null;
+  if (last && last.result) {
+    active = last.result.commit && last.result.commit.committed === true ? "Commit" : "Verify";
+  }
+  var html = "";
+  for (var i = 0; i < STAGES.length; i += 1) {
+    if (i > 0) html += '<span class="arrow">→</span>';
+    html += '<span class="stage' + (STAGES[i] === active ? " active" : "") + '">' + STAGES[i] + "</span>";
+  }
+  $("pipeline-strip").innerHTML = html;
+  $("strip-note").textContent = active
+    ? "Active stage from last exploration record (" + (last.recordedAt || "timestamp missing") + "): " + active + "."
+    : "Active stage derives from the last exploration record; no record found under data/explorations/.";
+}
+
+async function loadExplorations() {
+  try {
+    var env = await api("/api/explorations");
+    renderStrip(env.last);
+    if (env.last && env.last.result) {
+      renderExploreResult(env.last.result, env.last.recordedAt, "(last persisted record)");
+    }
+  } catch (err) {
+    renderStrip(null);
+    loud("explore-error", err);
+  }
+}
+
+// ---- explorer drill ------------------------------------------------------
+function metricChip(k, v) {
+  return '<div class="metric"><div class="k">' + esc(k) + '</div><div class="v">' + esc(v) + "</div></div>";
+}
+
+function gateChip(name, pass, note) {
+  return '<span class="chip ' + (pass === true ? "pass" : "fail") + '">' + esc(name) + " " + (pass === true ? "PASS" : "FAIL") + (note ? " · " + esc(note) : "") + "</span>";
+}
+
+function renderExploreResult(result, recordedAt, sourceNote) {
+  var r = result && result.reconcile ? result.reconcile : null;
+  var v = result && result.verify ? result.verify : null;
+  var c = result && result.commit ? result.commit : null;
+  if (!r || !v || !c) {
+    loud("explore-error", new Error("persisted record carries no reconcile/verify/commit stages; re-run the pipeline"));
+    return;
+  }
+  var m = r.metrics || {};
+  $("reconcile-metrics").innerHTML =
+    metricChip("alpha", fmt(r.alpha)) + metricChip("RCR", fmt(m.rcr)) + metricChip("B", fmt(m.b))
+    + metricChip("E", fmt(m.e)) + metricChip("L", fmt(m.l));
+
+  var g = v.gates || {};
+  var thr = function (name) { return CONSTANTS && CONSTANTS[name] !== undefined ? String(CONSTANTS[name]) : "—"; };
+  $("gate-chips").innerHTML =
+    gateChip("rcr", g.rcr, "≥ RCR_MIN " + thr("RCR_MIN")) + gateChip("b", g.b, "≤ B_MAX " + thr("B_MAX"))
+    + gateChip("e", g.e, "> E_MIN " + thr("E_MIN"))
+    + gateChip("threeAxis", v.threeAxis, "vs Control A")
+    + gateChip("ucr", g.ucr, g.ucrReportOnly ? "report-only below UCR_MIN_ELIGIBLE " + thr("UCR_MIN_ELIGIBLE") : "floor UCR_FLOOR " + thr("UCR_FLOOR"))
+    + '<span class="chip tier">voice: operational</span>';
+
+  var verdict = $("commit-verdict");
+  verdict.className = "verdict " + (c.committed === true ? "ok" : "no");
+  verdict.innerHTML = '<b>' + (c.committed === true ? "COMMITTED" : "REFUSED") + "</b> · reason: " + esc(c.reason)
+    + (recordedAt ? " · recorded " + esc(recordedAt) : "") + " <span class='muted' style='color:var(--dim)'>" + esc(sourceNote || "") + "</span>";
+}
+
+async function runExplore() {
+  var btn = $("explore-btn");
+  clear("explore-error");
+  try {
+    candidate = JSON.parse($("candidate-json").value);
+  } catch (err) {
+    loud("explore-error", new Error("candidate is not valid JSON: " + (err && err.message ? err.message : err)));
+    return;
+  }
+  if (!candidate || typeof candidate !== "object" || Array.isArray(candidate)) {
+    loud("explore-error", new Error("candidate must be a JSON object"));
+    return;
+  }
+  btn.disabled = true;
+  try {
+    var env = await api("/api/explore", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ candidate: candidate }),
+    });
+    renderExploreResult(env.result, env.recordedAt, "(this run)");
+    renderStrip({ result: env.result, recordedAt: env.recordedAt });
+  } catch (err) {
+    loud("explore-error", err);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ---- estate panel --------------------------------------------------------
+var estateRows = [];
+
+function renderEstate() {
+  if (!estateRows || !estateRows.nodes) return;
+  var filter = ($("estate-filter").value || "").trim().toLowerCase();
+  var validation = estateRows.validation;
+  var presentSet = validation ? new Set(validation.present) : new Set();
+  var shown = estateRows.nodes.filter(function (node) {
+    if (!filter) return true;
+    return [node.name, node.branch, node.state, node.category]
+      .concat([String(node.octave)])
+      .some(function (field) { return String(field == null ? "" : field).toLowerCase().indexOf(filter) !== -1; });
+  });
+  var html = "<table><thead><tr><th>name</th><th>octave</th><th>branch</th><th>state</th><th>present</th></tr></thead><tbody>";
+  for (var i = 0; i < shown.length; i += 1) {
+    var n = shown[i];
+    var here = validation ? presentSet.has(n.name) : null;
+    html += "<tr><td class='name'>" + esc(n.name) + "</td><td>" + esc(n.octave) + "</td><td>" + esc(n.branch)
+      + "</td><td>" + esc(n.state) + "</td><td>" + (here === null ? "—" : (here ? "<span class='here'>present</span>" : "<span class='miss'>MISSING</span>")) + "</td></tr>";
+  }
+  html += "</tbody></table>";
+  $("estate-table").innerHTML = html;
+  if (validation) {
+    $("validation-summary").innerHTML = "manifest <b>" + esc(estateRows.nodeCount) + "</b> nodes · present <b>" + esc(validation.present.length)
+      + "</b> · missing <b>" + esc(validation.missing.length) + "</b> · extra <b>" + esc(validation.extra.length)
+      + "</b> · vault ok <b>" + (validation.ok === true ? "yes" : "no") + "</b> · showing <b>" + shown.length + "</b> rows";
+  }
+}
+
+async function loadEstate() {
+  try {
+    var env = await api("/api/repos");
+    estateRows = { nodes: env.nodes, validation: env.validation, nodeCount: env.nodeCount };
+    renderEstate();
+  } catch (err) {
+    loud("estate-error", err);
+  }
+}
+
+// ---- regulator drill -----------------------------------------------------
+function detLine(detection, response) {
+  return '<div class="det"><span class="node">' + esc(detection.node) + "</span> · signal " + esc(fmt(detection.signal))
+    + " · <span class='act'>" + esc(response.action) + "</span> · weight " + esc(fmt(response.weight, 2))
+    + " · <span class='muted'>" + esc(response.rationale) + "</span></div>";
+}
+
+async function runRegulate() {
+  var btn = $("regulate-btn");
+  clear("regulate-error");
+  clear("regulate-out");
+  var magnitude = Number($("pert-magnitude").value);
+  if (!Number.isFinite(magnitude)) {
+    loud("regulate-error", new Error("magnitude must be a finite number"));
+    return;
+  }
+  var body = { type: $("pert-type").value || "", magnitude: magnitude };
+  var targets = ($("pert-targets").value || "").split(",").map(function (t) { return t.trim(); }).filter(Boolean);
+  if (targets.length > 0) body.targets = targets;
+  btn.disabled = true;
+  try {
+    var env = await api("/api/regulate", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    var gold = env.goldilocks || {};
+    var html = '<div class="verdict ' + (env.viable === true ? "ok" : "no") + '"><b>' + (env.viable === true ? "VIABLE" : "NOT VIABLE")
+      + "</b> · goldilocks D " + esc(fmt(gold.D)) + " / B " + esc(fmt(gold.B)) + " / E " + esc(fmt(gold.E))
+      + " → " + (gold.pass === true ? "PASS" : "FAIL") + " · loop " + esc(env.loop) + "</div>";
+    var detections = env.detections || [];
+    var responses = env.responses || [];
+    var shown = Math.min(detections.length, 12);
+    for (var i = 0; i < shown; i += 1) html += detLine(detections[i], responses[i] || { action: "—", rationale: "missing response", weight: 0 });
+    if (detections.length > shown) html += '<div class="muted-note">+' + (detections.length - shown) + " more detections of " + detections.length + " total.</div>";
+    $("regulate-out").innerHTML = html;
+  } catch (err) {
+    loud("regulate-error", err);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ---- experiments panel ---------------------------------------------------
+async function loadExperiments() {
+  try {
+    var env = await api("/api/experiments");
+    var report = env.report || {};
+    var results = report.results || {};
+    var experiments = report.experiments || [];
+    $("exp-summary").innerHTML = "<b>" + esc(results.n_pass) + "/" + esc(results.n_total) + " PASS</b>"
+      + (results.all_pass === true ? " — suite green" : " — FAILED: " + esc((results.failed || []).join(", ")))
+      + " · source: " + esc(env.source) + (report.generatedAt ? " · generated " + esc(report.generatedAt) : "");
+    var html = "";
+    for (var i = 0; i < experiments.length; i += 1) {
+      var e = experiments[i];
+      html += '<div class="exp"><span class="' + (e.pass === true ? "pass" : "nope") + '">' + (e.pass === true ? "PASS" : "FAIL")
+        + '</span><span class="id">' + esc(e.id) + " — " + esc(e.title) + '</span><span class="chip tier">' + esc(e.tier) + "</span></div>";
+    }
+    $("exp-list").innerHTML = html;
+  } catch (err) {
+    loud("experiments-error", err);
+  }
+}
+
+// ---- boot ----------------------------------------------------------------
+$("explore-btn").addEventListener("click", runExplore);
+$("regulate-btn").addEventListener("click", runRegulate);
+$("estate-filter").addEventListener("input", renderEstate);
+
+loadStatus();
+loadExplorations();
+loadEstate();
+loadExperiments();
+</script>
+</body>
+</html>

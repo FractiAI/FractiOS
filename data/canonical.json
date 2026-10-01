@@ -1,0 +1,10 @@
+{
+  "address": "5dff994097b55610dcca772131494f903759f689659ade658f74a0d8cf03c3fd",
+  "values": {
+    "cand": {
+      "coherence": 0.91,
+      "recovery_shape": 0.88,
+      "novelty": 0.42
+    }
+  }
+}

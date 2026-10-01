@@ -1,0 +1,14 @@
+{
+  "name": "fractios",
+  "version": "0.1618",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "research": "node experiments/run_empirical_pipeline.mjs",
+    "boot": "node cli/fractios.mjs boot",
+    "status": "node cli/fractios.mjs status",
+    "serve": "node cli/fractios.mjs serve"
+  }
+}

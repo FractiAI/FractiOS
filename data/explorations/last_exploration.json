@@ -1,0 +1,467 @@
+{
+  "recordedAt": "2026-10-01T01:15:40.506Z",
+  "docId": "WP-FRACTIOS-HOLOGRAPHIC-HOMEOSTASIS-2026-09-30",
+  "registryId": "fractios-2026-09",
+  "honestyBoundary": "Catalog engineering, not finished physics: Phi_EGS is a design grammar constant, not a physics constant. Nothing here claims recursive self-improvement (RSI) is solved. Correlation is not causation.",
+  "canonical": {
+    "values": {
+      "probe2": {
+        "coherence": 0.9,
+        "recovery_shape": 0.85,
+        "novelty": 0.5
+      }
+    },
+    "address": "cc4e24d2e810431ac58dba4bcab74725b85958da43e265de2d38f607294a2f1c"
+  },
+  "candidate": {
+    "probe2": {
+      "coherence": 0.9,
+      "recovery_shape": 0.85,
+      "novelty": 0.5
+    }
+  },
+  "result": {
+    "stages": {
+      "explore": {
+        "added": {
+          "probe2": {
+            "coherence": 0.9,
+            "recovery_shape": 0.85,
+            "novelty": 0.5
+          }
+        },
+        "removed": [
+          "cand"
+        ],
+        "removedValues": {
+          "cand": {
+            "coherence": 0.91,
+            "recovery_shape": 0.88,
+            "novelty": 0.42
+          }
+        },
+        "changed": {},
+        "base": "5dff994097b55610dcca772131494f903759f689659ade658f74a0d8cf03c3fd"
+      },
+      "organize": {
+        "shelves": [
+          [
+            [
+              "cand"
+            ],
+            [
+              "probe2"
+            ],
+            []
+          ],
+          [
+            [],
+            [],
+            []
+          ]
+        ],
+        "assignment": {
+          "cand": {
+            "shelf": 0,
+            "slot": 0
+          },
+          "probe2": {
+            "shelf": 0,
+            "slot": 1
+          }
+        },
+        "keyOrder": [
+          "cand",
+          "probe2"
+        ]
+      },
+      "contain": {
+        "containers": [
+          {
+            "index": 0,
+            "prime": 2,
+            "boundary": 2,
+            "keys": [
+              "cand",
+              "probe2"
+            ]
+          }
+        ],
+        "assignment": {
+          "cand": 0,
+          "probe2": 0
+        },
+        "transitions": 0,
+        "contained": 2,
+        "leaked": 0,
+        "b": 0
+      },
+      "reconcile": {
+        "alpha": 1,
+        "blended": {
+          "values": {
+            "probe2": {
+              "coherence": 0.9,
+              "recovery_shape": 0.85,
+              "novelty": 0.5
+            }
+          },
+          "version": 1,
+          "address": "cc4e24d2e810431ac58dba4bcab74725b85958da43e265de2d38f607294a2f1c"
+        },
+        "delta": {
+          "added": {
+            "probe2": {
+              "coherence": 0.9,
+              "recovery_shape": 0.85,
+              "novelty": 0.5
+            }
+          },
+          "removed": [
+            "cand"
+          ],
+          "removedValues": {
+            "cand": {
+              "coherence": 0.91,
+              "recovery_shape": 0.88,
+              "novelty": 0.42
+            }
+          },
+          "changed": {},
+          "base": "5dff994097b55610dcca772131494f903759f689659ade658f74a0d8cf03c3fd"
+        },
+        "metrics": {
+          "rcr": 1,
+          "b": 0,
+          "e": 1,
+          "l": 0
+        }
+      },
+      "verify": {
+        "threeAxis": true,
+        "gates": {
+          "rcr": true,
+          "b": true,
+          "e": true,
+          "ucr": true,
+          "ucrValue": 1,
+          "ucrReportOnly": true
+        },
+        "pass": true
+      },
+      "commit": {
+        "committed": true,
+        "reason": "verify.pass",
+        "canonical": {
+          "values": {
+            "probe2": {
+              "coherence": 0.9,
+              "recovery_shape": 0.85,
+              "novelty": 0.5
+            }
+          },
+          "version": 2,
+          "address": "cc4e24d2e810431ac58dba4bcab74725b85958da43e265de2d38f607294a2f1c"
+        },
+        "journal": {
+          "voiceTier": "operational",
+          "honestyBoundary": "Catalog engineering, not finished physics: Phi_EGS is a design grammar constant, not a physics constant. Nothing here claims recursive self-improvement (RSI) is solved. Correlation is not causation.",
+          "stages": {
+            "explore": {
+              "added": {
+                "probe2": {
+                  "coherence": 0.9,
+                  "recovery_shape": 0.85,
+                  "novelty": 0.5
+                }
+              },
+              "removed": [
+                "cand"
+              ],
+              "removedValues": {
+                "cand": {
+                  "coherence": 0.91,
+                  "recovery_shape": 0.88,
+                  "novelty": 0.42
+                }
+              },
+              "changed": {},
+              "base": "5dff994097b55610dcca772131494f903759f689659ade658f74a0d8cf03c3fd"
+            },
+            "organize": {
+              "shelves": [
+                [
+                  [
+                    "cand"
+                  ],
+                  [
+                    "probe2"
+                  ],
+                  []
+                ],
+                [
+                  [],
+                  [],
+                  []
+                ]
+              ],
+              "assignment": {
+                "cand": {
+                  "shelf": 0,
+                  "slot": 0
+                },
+                "probe2": {
+                  "shelf": 0,
+                  "slot": 1
+                }
+              },
+              "keyOrder": [
+                "cand",
+                "probe2"
+              ]
+            },
+            "contain": {
+              "containers": [
+                {
+                  "index": 0,
+                  "prime": 2,
+                  "boundary": 2,
+                  "keys": [
+                    "cand",
+                    "probe2"
+                  ]
+                }
+              ],
+              "assignment": {
+                "cand": 0,
+                "probe2": 0
+              },
+              "transitions": 0,
+              "contained": 2,
+              "leaked": 0,
+              "b": 0
+            },
+            "reconcile": {
+              "alpha": 1,
+              "metrics": {
+                "rcr": 1,
+                "b": 0,
+                "e": 1,
+                "l": 0
+              },
+              "novelty": 1,
+              "divergence": 0
+            },
+            "verify": {
+              "threeAxis": true,
+              "gates": {
+                "rcr": true,
+                "b": true,
+                "e": true,
+                "ucr": true,
+                "ucrValue": 1,
+                "ucrReportOnly": true
+              },
+              "pass": true
+            },
+            "commit": {
+              "committed": true,
+              "reason": "verify.pass"
+            }
+          },
+          "alpha": 1,
+          "metrics": {
+            "rcr": 1,
+            "b": 0,
+            "e": 1,
+            "l": 0
+          },
+          "summary": "{\"alpha\":1,\"committed\":true,\"metrics\":{\"b\":0,\"e\":1,\"l\":0,\"rcr\":1},\"reason\":\"verify.pass\"}"
+        }
+      }
+    },
+    "reconcile": {
+      "alpha": 1,
+      "blended": {
+        "values": {
+          "probe2": {
+            "coherence": 0.9,
+            "recovery_shape": 0.85,
+            "novelty": 0.5
+          }
+        },
+        "version": 1,
+        "address": "cc4e24d2e810431ac58dba4bcab74725b85958da43e265de2d38f607294a2f1c"
+      },
+      "delta": {
+        "added": {
+          "probe2": {
+            "coherence": 0.9,
+            "recovery_shape": 0.85,
+            "novelty": 0.5
+          }
+        },
+        "removed": [
+          "cand"
+        ],
+        "removedValues": {
+          "cand": {
+            "coherence": 0.91,
+            "recovery_shape": 0.88,
+            "novelty": 0.42
+          }
+        },
+        "changed": {},
+        "base": "5dff994097b55610dcca772131494f903759f689659ade658f74a0d8cf03c3fd"
+      },
+      "metrics": {
+        "rcr": 1,
+        "b": 0,
+        "e": 1,
+        "l": 0
+      }
+    },
+    "verify": {
+      "threeAxis": true,
+      "gates": {
+        "rcr": true,
+        "b": true,
+        "e": true,
+        "ucr": true,
+        "ucrValue": 1,
+        "ucrReportOnly": true
+      },
+      "pass": true
+    },
+    "commit": {
+      "committed": true,
+      "reason": "verify.pass",
+      "canonical": {
+        "values": {
+          "probe2": {
+            "coherence": 0.9,
+            "recovery_shape": 0.85,
+            "novelty": 0.5
+          }
+        },
+        "version": 2,
+        "address": "cc4e24d2e810431ac58dba4bcab74725b85958da43e265de2d38f607294a2f1c"
+      },
+      "journal": {
+        "voiceTier": "operational",
+        "honestyBoundary": "Catalog engineering, not finished physics: Phi_EGS is a design grammar constant, not a physics constant. Nothing here claims recursive self-improvement (RSI) is solved. Correlation is not causation.",
+        "stages": {
+          "explore": {
+            "added": {
+              "probe2": {
+                "coherence": 0.9,
+                "recovery_shape": 0.85,
+                "novelty": 0.5
+              }
+            },
+            "removed": [
+              "cand"
+            ],
+            "removedValues": {
+              "cand": {
+                "coherence": 0.91,
+                "recovery_shape": 0.88,
+                "novelty": 0.42
+              }
+            },
+            "changed": {},
+            "base": "5dff994097b55610dcca772131494f903759f689659ade658f74a0d8cf03c3fd"
+          },
+          "organize": {
+            "shelves": [
+              [
+                [
+                  "cand"
+                ],
+                [
+                  "probe2"
+                ],
+                []
+              ],
+              [
+                [],
+                [],
+                []
+              ]
+            ],
+            "assignment": {
+              "cand": {
+                "shelf": 0,
+                "slot": 0
+              },
+              "probe2": {
+                "shelf": 0,
+                "slot": 1
+              }
+            },
+            "keyOrder": [
+              "cand",
+              "probe2"
+            ]
+          },
+          "contain": {
+            "containers": [
+              {
+                "index": 0,
+                "prime": 2,
+                "boundary": 2,
+                "keys": [
+                  "cand",
+                  "probe2"
+                ]
+              }
+            ],
+            "assignment": {
+              "cand": 0,
+              "probe2": 0
+            },
+            "transitions": 0,
+            "contained": 2,
+            "leaked": 0,
+            "b": 0
+          },
+          "reconcile": {
+            "alpha": 1,
+            "metrics": {
+              "rcr": 1,
+              "b": 0,
+              "e": 1,
+              "l": 0
+            },
+            "novelty": 1,
+            "divergence": 0
+          },
+          "verify": {
+            "threeAxis": true,
+            "gates": {
+              "rcr": true,
+              "b": true,
+              "e": true,
+              "ucr": true,
+              "ucrValue": 1,
+              "ucrReportOnly": true
+            },
+            "pass": true
+          },
+          "commit": {
+            "committed": true,
+            "reason": "verify.pass"
+          }
+        },
+        "alpha": 1,
+        "metrics": {
+          "rcr": 1,
+          "b": 0,
+          "e": 1,
+          "l": 0
+        },
+        "summary": "{\"alpha\":1,\"committed\":true,\"metrics\":{\"b\":0,\"e\":1,\"l\":0,\"rcr\":1},\"reason\":\"verify.pass\"}"
+      }
+    }
+  }
+}
